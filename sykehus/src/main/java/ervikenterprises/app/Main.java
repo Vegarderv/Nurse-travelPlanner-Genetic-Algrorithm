@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 public class Main {
 
     public static void main(String[] args) {
+        long start = System.currentTimeMillis();
         // Loading Problem
         Path filePath = Path.of("Instances to Project 2/train_9.json");
 
@@ -35,7 +36,7 @@ public class Main {
 
         // Initializing first threads, Clusters initialized with K-means
         List<GA> gas = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < Enviroment.THREADS; i++) {
             gas.add(new GA(problem, false, i));
             gas.get(i).start();   
         }
@@ -64,5 +65,8 @@ public class Main {
         System.out.println(last.getSolution().get(0).getSolution().getSolution());
         System.out.println("\nFITNESS:\n");
         System.out.println(last.getSolution().get(0).getSolution().getFitness());
+
+        long end = System.currentTimeMillis();
+        System.out.println("TIME PASSED: "  + (end-start) / 1000 + "s");
     }
 }

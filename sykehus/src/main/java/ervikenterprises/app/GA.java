@@ -11,11 +11,11 @@ public class GA extends Thread{
     private Problem problem;
     private List<ClusterHolder> clusters;
     private List<ClusterHolder> parents;
-    private Enviroment enVar = new Enviroment();
     private List<Double> bestFitnessOverTime;
     private boolean cross;
     private int number;
     private boolean progress;
+    private final int maxGen;
 
     /**
      * Initalize with K-means
@@ -30,6 +30,7 @@ public class GA extends Thread{
         init();
         this.cross = crossover;
         this.number = number;
+        maxGen = Enviroment.MAX_GENERATIONS;
         System.out.println("THREAD " + this.number + " IS RUNNING");
     }
 
@@ -46,6 +47,7 @@ public class GA extends Thread{
         problem.init();
         this.clusters = clusters;
         this.cross = true;
+        maxGen = Enviroment.MAX_GEN_FINAL;
         this.progress = true;
     }
 
@@ -56,14 +58,14 @@ public class GA extends Thread{
     private void init() {
         problem.init();
         clusters = new ArrayList<>();
-        for (int i = 0; i < enVar.POPULATION_SIZE; i++) {
+        for (int i = 0; i < Enviroment.POPULATION_SIZE; i++) {
             clusters.add(new KMeans(problem.getNbr_nurses(), problem.getPatientsList(), 7).run(problem));
         }
     }
 
     // Mutate
     private void mutation() {
-        parents.forEach(cluster -> cluster.localMutate(enVar.MUTATION_RATE));
+        parents.forEach(cluster -> cluster.localMutate(Enviroment.MUTATION_RATE));
     }
 
     // Crossbow
@@ -71,7 +73,7 @@ public class GA extends Thread{
         if (cross) {
             for (ClusterHolder clusterHolder : parents) {
                 double chance = new Random().nextDouble();
-                if (chance > enVar.CROSSOVER_RATE) {
+                if (chance > Enviroment.CROSSOVER_RATE) {
                     clusterHolder.crossover(clusters.get(new Random().nextInt(clusters.size())));
                 }
             }
@@ -83,7 +85,7 @@ public class GA extends Thread{
     private void chooseParent(List<Double> ranking) {
         double cumulativeChance = 0;
         double winner = new Random().nextDouble();
-        for (int j = 0; j < enVar.POPULATION_SIZE; j++) {
+        for (int j = 0; j < Enviroment.POPULATION_SIZE; j++) {
             if (cumulativeChance + ranking.get(j) > winner) {
                 parents.add(new ClusterHolder(clusters.get(j)));
                 break;
@@ -97,12 +99,12 @@ public class GA extends Thread{
     private void chooseParents() {
         this.parents = new ArrayList<>();
         clusters.sort((c1, c2) -> Double.compare(c2.getSolution().getFitness(), c1.getSolution().getFitness()));
-        bestFitnessOverTime.add(clusters.get(enVar.POPULATION_SIZE - 1).getSolution().getFitness());
+        bestFitnessOverTime.add(clusters.get(Enviroment.POPULATION_SIZE - 1).getSolution().getFitness());
         List<Double> ranking = new ArrayList<>();
-        for (int i = 0; i < enVar.POPULATION_SIZE; i++) {
-            ranking.add((2-enVar.S_FACTOR) / enVar.POPULATION_SIZE + 2*i*(enVar.S_FACTOR-1)/(enVar.POPULATION_SIZE*(enVar.POPULATION_SIZE-1)));
+        for (int i = 0; i < Enviroment.POPULATION_SIZE; i++) {
+            ranking.add((2-Enviroment.S_FACTOR) / Enviroment.POPULATION_SIZE + 2*i*(Enviroment.S_FACTOR-1)/(Enviroment.POPULATION_SIZE*(Enviroment.POPULATION_SIZE-1)));
         }
-        for (int i = 0; i < enVar.POPULATION_SIZE  - enVar.GG; i++) {
+        for (int i = 0; i < Enviroment.POPULATION_SIZE  - Enviroment.GG; i++) {
             chooseParent(ranking);
         }
     }
@@ -112,7 +114,7 @@ public class GA extends Thread{
         chooseParents();
         mutation();
         crossover();
-        parents.addAll(clusters.subList(enVar.POPULATION_SIZE - enVar.GG, enVar.POPULATION_SIZE));
+        parents.addAll(clusters.subList(Enviroment.POPULATION_SIZE - Enviroment.GG, Enviroment.POPULATION_SIZE));
         clusters = parents;
     }
 
@@ -120,12 +122,12 @@ public class GA extends Thread{
     // Starts thread
     public void run() {
         if (progress) {System.out.println("\nPROGRESS:");}
-        for (int i = 0; i < enVar.MAX_GENERATIONS; i++) {
-            if (progress) {System.out.print("\r" + i + "/" + enVar.MAX_GENERATIONS);}
+        for (int i = 0; i < maxGen; i++) {
+            if (progress) {System.out.print("\r" + i + "/" + maxGen);}
             iteration();
             //System.out.println("NEW GENERATION! Best individual fitness = " + bestFitnessOverTime.get(i));            
         }
-        // System.out.println(this.clusters.get(enVar.POPULATION_SIZE - 1).getSolution().getSolution());
+        // System.out.println(this.clusters.get(Enviroment.POPULATION_SIZE - 1).getSolution().getSolution());
         // System.out.println(this.bestFitnessOverTime);
     }
 
@@ -135,7 +137,7 @@ public class GA extends Thread{
      * @return n best individuals
      */
     public List<ClusterHolder> getSolution() {
-        return clusters.subList(this.enVar.POPULATION_SIZE - enVar.POPULATION_SIZE / enVar.THREADS, this.enVar.POPULATION_SIZE);
+        return clusters.subList(Enviroment.POPULATION_SIZE - Enviroment.POPULATION_SIZE / Enviroment.THREADS, Enviroment.POPULATION_SIZE);
     }
 
     @Override
