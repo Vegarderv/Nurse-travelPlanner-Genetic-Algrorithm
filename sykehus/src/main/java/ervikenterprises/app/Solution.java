@@ -96,8 +96,8 @@ public class Solution {
     }
 
 
-    public int getFitness() {
-        return (int) Math.round(fitness);
+    public double getFitness() {
+        return fitness;
     }
 
     @Override

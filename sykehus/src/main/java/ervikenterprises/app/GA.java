@@ -12,7 +12,7 @@ public class GA extends Thread{
     private List<ClusterHolder> clusters;
     private List<ClusterHolder> parents;
     private Enviroment enVar = new Enviroment();
-    private List<Integer> bestFitnessOverTime;
+    private List<Double> bestFitnessOverTime;
     private boolean cross;
     private int number;
     private boolean progress;
@@ -96,7 +96,7 @@ public class GA extends Thread{
     // Choose n best parents with ranking. Stochastic
     private void chooseParents() {
         this.parents = new ArrayList<>();
-        clusters.sort((c1, c2) -> c2.getSolution().getFitness() - c1.getSolution().getFitness());
+        clusters.sort((c1, c2) -> Double.compare(c2.getSolution().getFitness(), c1.getSolution().getFitness()));
         bestFitnessOverTime.add(clusters.get(enVar.POPULATION_SIZE - 1).getSolution().getFitness());
         List<Double> ranking = new ArrayList<>();
         for (int i = 0; i < enVar.POPULATION_SIZE; i++) {

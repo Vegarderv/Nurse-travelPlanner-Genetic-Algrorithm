@@ -168,13 +168,13 @@ public class ClusterHolder {
         for (patient patient : patients) {
             int bestCluster = -1;
             int bestPos = -1;
-            int bestFitness = 99999999;
+            double bestFitness = 99999999;
             List<List<String>> SolLists = clusters.stream().map(cluster -> cluster.toSolution())
                     .collect(Collectors.toList());
             for (int i = 0; i < SolLists.size(); i++) {
                 for (int j = 0; j < SolLists.get(i).size() + 1; j++) {
                     SolLists.get(i).add(j, patient.getName());
-                    int fitness = new Solution(SolLists, problem).getFitness();
+                    double fitness = new Solution(SolLists, problem).getFitness();
                     if (fitness < bestFitness) {
                         bestCluster = i;
                         bestPos = j;
