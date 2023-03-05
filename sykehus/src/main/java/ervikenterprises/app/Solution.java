@@ -10,14 +10,16 @@ public class Solution {
     private Problem problem;
     private double fitness = 0;
     private boolean isValid;
+    private boolean legal;
 
     /**
      * @param solution
      * @param problem
      */
-    public Solution(List<List<String>> solution, Problem problem) {
+    public Solution(List<List<String>> solution, Problem problem, boolean legal) {
         this.solution = solution;
         this.problem = problem;
+        this.legal = legal;
         this.isValid = isValid();
         setFitness();
     }
@@ -40,7 +42,7 @@ public class Solution {
             }
             fitness += problem.getTravel_times()[prev_patient][0];
         }
-        if (!isValid) { fitness *= 1000;}
+        if (!isValid && legal) { fitness *= 1000;}
     }
 
     public void setSolution(List<List<String>> solution) {
@@ -104,6 +106,10 @@ public class Solution {
     public String toString() {
         return "Solution [solution=" + solution + ", problem=" + problem + ", fitness=" + fitness + ", isValid="
                 + isValid + "]";
+    }
+
+    public boolean isLegal() {
+        return legal;
     }
 
     

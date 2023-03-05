@@ -94,7 +94,7 @@ public class Main {
         GA last = new GA(problem, clusters2);
         last.run();
 
-        System.out.println("\n\nSCORE BEFORE FINAL STRETCH:");
+        System.out.println("\n\nSCORE BEFORE FINAL STRETCH: (" + (System.currentTimeMillis() - start) / 1000 + "s)");
         System.out.println(last.getSolution(false).get(ratio/2-1).getSolution().getFitness() + "\n");
         GA finalGa = new GA(problem, last.getSolution(true), false);
 

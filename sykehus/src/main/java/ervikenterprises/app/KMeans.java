@@ -21,12 +21,14 @@ public class KMeans {
     private int y_min;
     private int y_max;
     private int repetitions;
+    private boolean legal;
 
 
-    public KMeans(int k, List<patient> coordinates, int repetitions) {
+    public KMeans(int k, List<patient> coordinates, int repetitions, boolean legal) {
         this.k = k;
         this.coordinates = coordinates;
         this.repetitions = repetitions;
+        this.legal = legal;
         generateMap();
     }
 
@@ -77,7 +79,7 @@ public class KMeans {
             clust();
         }
         sortClusters();
-        return new ClusterHolder(clusters, problem); 
+        return new ClusterHolder(clusters, problem, legal); 
     }
 
 

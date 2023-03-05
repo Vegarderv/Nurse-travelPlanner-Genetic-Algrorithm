@@ -18,15 +18,17 @@ public class ClusterHolder {
     private List<Cluster> clusters;
     private Solution solution;
     private Problem problem;
+    private boolean legal;
 
     /**
      * Initialize new Clusterholder
      * @param clusters
      * @param problem
      */
-    public ClusterHolder(List<Cluster> clusters, Problem problem) {
+    public ClusterHolder(List<Cluster> clusters, Problem problem, boolean legal) {
         this.clusters = clusters;
         this.problem = problem;
+        this.legal = legal;
         generateSolution();
     }
 
@@ -37,6 +39,7 @@ public class ClusterHolder {
     public ClusterHolder(ClusterHolder another) {
         this.problem = another.problem;
         this.solution = another.solution;
+        this.legal = another.legal;
         this.clusters = another.clusters.stream().map(clust -> new Cluster(clust)).collect(Collectors.toList());
     }
 
@@ -179,7 +182,7 @@ public class ClusterHolder {
             for (int i = 0; i < SolLists.size(); i++) {
                 for (int j = 0; j < SolLists.get(i).size() + 1; j++) {
                     SolLists.get(i).add(j, patient.getName());
-                    double fitness = new Solution(SolLists, problem).getFitness();
+                    double fitness = new Solution(SolLists, problem, legal).getFitness();
                     if (fitness < bestFitness) {
                         bestCluster = i;
                         bestPos = j;
@@ -196,12 +199,18 @@ public class ClusterHolder {
         return clusters;
     }
 
+    
+
     public void setClusters(List<Cluster> clusters) {
         this.clusters = clusters;
     }
 
+    public boolean isLegal() {
+        return legal;
+    }
+
     public void generateSolution() {
-        solution = new Solution(clusters.stream().map(cluster -> cluster.toSolution()).toList(), problem);
+        solution = new Solution(clusters.stream().map(cluster -> cluster.toSolution()).toList(), problem, legal);
     }
 
     public Solution getSolution() {
@@ -223,6 +232,10 @@ public class ClusterHolder {
                         .map(pat -> Arrays.asList(pat.getX_coord(), pat.getY_coord())).toList())
                 .toList();
         return new Gson().toJson(points);
+    }
+
+    public Problem getProblem() {
+        return problem;
     }
 
 }
