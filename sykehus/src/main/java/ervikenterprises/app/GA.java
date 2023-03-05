@@ -185,6 +185,7 @@ public class GA extends Thread {
      * @return n best individuals
      */
     public List<ClusterHolder> getSolution(boolean all) {
+        clusters.sort((c1, c2) -> Double.compare(c2.getSolution().getFitness(), c1.getSolution().getFitness()));
         int length = clusters.stream().filter(c -> c.isLegal()).toList().size();
         if (all) {
             return new ArrayList<>(clusters.stream().filter(c -> c.isLegal()).toList());
