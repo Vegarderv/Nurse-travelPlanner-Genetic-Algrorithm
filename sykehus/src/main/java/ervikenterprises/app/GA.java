@@ -27,12 +27,14 @@ public class GA extends Thread{
     public GA(Problem problem, boolean crossover, int number) {
         this.problem = problem;
         bestFitnessOverTime = new ArrayList<>();
+        clusters = new ArrayList<>();
         init();
         this.cross = crossover;
         this.number = number;
         maxGen = Enviroment.MAX_GENERATIONS;
         System.out.println("THREAD " + this.number + " IS RUNNING");
     }
+
 
 
     /**
@@ -44,11 +46,21 @@ public class GA extends Thread{
     public GA(Problem problem, List<ClusterHolder> clusters) {
         this.problem = problem;
         bestFitnessOverTime = new ArrayList<>();
-        problem.init();
-        this.clusters = clusters;
+        this.clusters = new ArrayList<>(clusters);
+        init();
         this.cross = true;
         maxGen = Enviroment.MAX_GEN_FINAL;
         this.progress = true;
+    }
+
+    public GA(Problem problem, List<ClusterHolder> clusters, boolean crossover) {
+        this.problem = problem;
+        bestFitnessOverTime = new ArrayList<>();
+        this.clusters = new ArrayList<>(clusters);
+        init();
+        this.cross = crossover;
+        maxGen = Enviroment.MAX_GEN_FINAL;
+        this.progress = crossover;
     }
 
 
@@ -57,9 +69,14 @@ public class GA extends Thread{
      */
     private void init() {
         problem.init();
-        clusters = new ArrayList<>();
-        for (int i = 0; i < Enviroment.POPULATION_SIZE; i++) {
-            clusters.add(new KMeans(problem.getNbr_nurses(), problem.getPatientsList(), 7).run(problem));
+        int end = clusters.size();
+        for (int i = 0; i < Enviroment.POPULATION_SIZE - end; i++) {
+            clusters.add(new KMeans(new Random().nextInt(problem.getNbr_nurses() - 1) + 1, problem.getPatientsList(), new Random().nextInt(10) + 1).run(problem));
+            for (ClusterHolder cHolder : clusters) {
+                while (cHolder.getClusters().size() < problem.getNbr_nurses()) {
+                    cHolder.getClusters().add(new Cluster(0, 0));
+                }
+            }
         }
     }
 
@@ -136,7 +153,10 @@ public class GA extends Thread{
      * Returns solution
      * @return n best individuals
      */
-    public List<ClusterHolder> getSolution() {
+    public List<ClusterHolder> getSolution(boolean all) {
+        if (all) {
+            return new ArrayList<>(clusters);
+        }
         return clusters.subList(Enviroment.POPULATION_SIZE - Enviroment.POPULATION_SIZE / Enviroment.THREADS, Enviroment.POPULATION_SIZE);
     }
 

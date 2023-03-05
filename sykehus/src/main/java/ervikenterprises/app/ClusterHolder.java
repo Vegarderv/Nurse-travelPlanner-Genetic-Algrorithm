@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import com.google.gson.Gson;
+
 
 /**
  * Used as one individual in the GA
@@ -213,12 +215,11 @@ public class ClusterHolder {
     }
 
     public String toPython() {
-        String centers = clusters.stream().map(clust -> Arrays.asList(clust.getX(), clust.getY())).toList().toString();
-        String points = clusters
+        List<List<List<Integer>>> points = clusters
                 .stream().map(clust -> clust.getPatients().stream()
-                        .map(pat -> Arrays.asList(pat.getX_coord(), pat.getY_coord())).toList().toString())
-                .toList().toString();
-        return centers + "   " + points;
+                        .map(pat -> Arrays.asList(pat.getX_coord(), pat.getY_coord())).toList())
+                .toList();
+        return new Gson().toJson(points);
     }
 
 }
