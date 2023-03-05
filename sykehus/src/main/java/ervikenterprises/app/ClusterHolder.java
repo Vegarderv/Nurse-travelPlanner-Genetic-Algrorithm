@@ -2,6 +2,7 @@ package ervikenterprises.app;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -147,6 +148,8 @@ public class ClusterHolder {
                 clusters.get(new Random().nextInt(problem.getNbr_nurses())).getPatients());
         List<patient> patients2 = new ArrayList<>(
                 other.clusters.get(new Random().nextInt(problem.getNbr_nurses())).getPatients());
+        Collections.shuffle(patients);
+        Collections.shuffle(patients2);
         removePatients(patients2);
         other.removePatients(patients);
         assignPatients(patients2);
