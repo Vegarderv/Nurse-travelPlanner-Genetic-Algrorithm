@@ -21,7 +21,7 @@ public class Main {
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
         // Loading Problem
-        Path filePath = Path.of("Instances to Project 2/train_9.json");
+        Path filePath = Path.of("Instances to Project 2/train_4.json");
 
         String content = "";
         try {
@@ -102,7 +102,7 @@ public class Main {
             finalGa.run();
         }
 
-        Path writePath = Path.of("solutions/solution_1.json");
+        Path writePath = Path.of("solutions/solution_show.json");
 
         try {
             Files.write(writePath, finalGa.getSolution(false).get(ratio/2-1).toPython().getBytes());
