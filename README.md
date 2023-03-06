@@ -2,6 +2,8 @@
 
 Currently 1st place in class leaderboards
 
+Completes all tasks with a 3% benchmark in 180s
+
 
 ## Currently suggested enviroment variables:
 
@@ -12,5 +14,6 @@ Currently 1st place in class leaderboards
 - S Factor: Between 1.85 and 1.95
 - Threads: As many as possible (Pop size has to be dividable with this) (4-20) is generally a nice place
 - Max Generations: As many as possible
+- Legal population proportion: I find 0.7 - 0.9 to be a nice place
 
 **NOT TO BE BOILED**
