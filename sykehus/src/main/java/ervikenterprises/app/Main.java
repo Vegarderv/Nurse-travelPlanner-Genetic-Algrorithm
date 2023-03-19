@@ -21,7 +21,7 @@ public class Main {
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
         // Loading Problem
-        Path filePath = Path.of("Instances to Project 2/train_4.json");
+        Path filePath = Path.of("Instances to Project 2/train_9.json");
 
         String content = "";
         try {
